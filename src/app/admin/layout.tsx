@@ -1,10 +1,9 @@
-import { AdminShell } from "@/shared/layouts/AdminShell";
+import { AdminLayoutWrapper } from "@/shared/layouts/AdminLayoutWrapper";
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <AdminShell>{children}</AdminShell>;
+  return <AdminLayoutWrapper>{children}</AdminLayoutWrapper>;
 }
-

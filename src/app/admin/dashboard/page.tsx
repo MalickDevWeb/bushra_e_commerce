@@ -257,13 +257,12 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Top Products */}
-          <div className="bg-[#14120f] border border-[#d4af37]/20 rounded-xl p-6 xl:col-span-1">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-[#e8e1d3]">Produits les plus vendus</h2>
-              <Link href="#" className="text-xs text-[#d4af37] hover:underline">Voir tout</Link>
+          <div className="bg-[#14120f] border border-[#d4af37]/20 rounded-xl p-6 xl:col-span-1 flex flex-col">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-base font-bold text-[#e8e1d3]">Produits les plus vendus</h2>
+              <Link href="#" className="text-xs text-[#d4af37] hover:underline shrink-0">Voir tout</Link>
             </div>
-            
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-4 flex-1">
               {[
                 { name: "Encens Royal Oud", sales: "45 ventes", price: "450 000 FCFA" },
                 { name: "Coffret Prestige", sales: "32 ventes", price: "320 000 FCFA" },
@@ -271,19 +270,90 @@ export default function AdminDashboardPage() {
                 { name: "Brûleur Traditionnel", sales: "22 ventes", price: "220 000 FCFA" },
                 { name: "Collection Éclat", sales: "20 ventes", price: "200 000 FCFA" },
               ].map((product, i) => (
-                <div key={i} className="flex items-center gap-4">
-                  <div className="w-6 h-6 rounded bg-[#14120f] border border-[#d4af37]/30 flex items-center justify-center text-[11px] text-[#d4af37] shrink-0 font-medium">
-                    {i + 1}
+                <div key={i} className="flex items-center gap-3">
+                  <span className="w-5 h-5 rounded border border-[#d4af37]/30 flex items-center justify-center text-[10px] text-[#d4af37] shrink-0 font-medium">{i + 1}</span>
+                  <div className="w-9 h-9 rounded-md bg-[#d4af37]/10 flex items-center justify-center border border-[#d4af37]/20 shrink-0 text-[#d4af37]">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z" /></svg>
                   </div>
-                  <div className="w-10 h-10 rounded-md bg-[#d4af37]/10 flex items-center justify-center border border-[#d4af37]/20 shrink-0 text-[#d4af37]">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z" /></svg>
-                  </div>
-                  <div className="flex flex-col flex-1">
-                    <span className="text-sm font-medium text-[#e8e1d3] truncate">{product.name}</span>
+                  <div className="flex flex-col flex-1 min-w-0">
+                    <span className="text-[13px] font-semibold text-[#e8e1d3] truncate">{product.name}</span>
                     <span className="text-[11px] text-[#a89b82]">{product.sales}</span>
                   </div>
-                  <div className="text-[13px] font-bold text-[#e8e1d3] shrink-0 whitespace-nowrap">
-                    {product.price}
+                  <div className="flex flex-col items-end shrink-0">
+                    <span className="text-[12px] font-bold text-[#d4af37] whitespace-nowrap">{product.price}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+
+        {/* ROW 4: TABLES */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          {/* Latest Orders */}
+          <div className="bg-[#14120f] border border-[#d4af37]/20 rounded-xl p-5 flex flex-col">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-base font-bold text-[#e8e1d3]">Dernières commandes</h2>
+              <Link href="#" className="text-xs text-[#d4af37] hover:underline shrink-0">Voir tout</Link>
+            </div>
+            {/* Header */}
+            <div className="grid grid-cols-[80px_1fr_110px_100px] gap-2 pb-2 border-b border-[#d4af37]/20 text-[10px] text-[#a89b82] uppercase tracking-wider">
+              <span>N° cmd</span>
+              <span>Client</span>
+              <span>Montant</span>
+              <span>Statut</span>
+            </div>
+            <div className="flex flex-col divide-y divide-[#d4af37]/10">
+              {[
+                { id: "#1024", client: "Ahmed Fall", amount: "28 500 FCFA", status: "En préparation", sColor: "bg-[#d4af37]/15 text-[#d4af37] border-[#d4af37]/30" },
+                { id: "#1023", client: "Awa Sarr", amount: "45 000 FCFA", status: "Confirmée", sColor: "bg-[#2ecc71]/15 text-[#2ecc71] border-[#2ecc71]/30" },
+                { id: "#1022", client: "Cheikh Diop", amount: "32 000 FCFA", status: "Expédiée", sColor: "bg-[#3498db]/15 text-[#3498db] border-[#3498db]/30" },
+                { id: "#1021", client: "Fatou Ndiaye", amount: "18 900 FCFA", status: "Livrée", sColor: "bg-[#2ecc71]/15 text-[#2ecc71] border-[#2ecc71]/30" },
+                { id: "#1020", client: "Moustapha Ba", amount: "52 000 FCFA", status: "En attente", sColor: "bg-[#95a5a6]/15 text-[#95a5a6] border-[#95a5a6]/30" },
+              ].map((order, i) => (
+                <div key={i} className="grid grid-cols-[80px_1fr_110px_100px] gap-2 py-3 hover:bg-[#d4af37]/5 transition-colors items-center text-[12.5px]">
+                  <span className="font-semibold text-[#d4af37]">{order.id}</span>
+                  <span className="text-[#e8e1d3] truncate">{order.client}</span>
+                  <span className="text-[#e8e1d3] font-medium whitespace-nowrap">{order.amount}</span>
+                  <span className={`px-2 py-0.5 text-[9px] rounded-full border w-fit ${order.sColor}`}>{order.status}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+
+          {/* Messages */}
+          <div className="bg-[#14120f] border border-[#d4af37]/20 rounded-xl p-5 flex flex-col">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-base font-bold text-[#e8e1d3]">Messages reçus</h2>
+              <Link href="#" className="text-xs text-[#d4af37] hover:underline shrink-0">Voir tout</Link>
+            </div>
+            {/* Header */}
+            <div className="grid grid-cols-[1fr_1fr_90px] gap-3 pb-2 border-b border-[#d4af37]/20 text-[10px] text-[#a89b82] uppercase tracking-wider">
+              <span>Expéditeur</span>
+              <span>Sujet</span>
+              <span>Date</span>
+            </div>
+            <div className="flex flex-col divide-y divide-[#d4af37]/10">
+              {[
+                { sender: "Awa Sarr", iconColor: "text-[#d4af37]", subject: "Renseignement produit", date: "18/09", time: "09:12" },
+                { sender: "Mamadou Diop", iconColor: "text-[#2ecc71]", subject: "Livraison commande", date: "18/09", time: "08:45" },
+                { sender: "Fatou Ndiaye", iconColor: "text-[#d4af37]", subject: "Problème de commande", date: "17/09", time: "16:30" },
+                { sender: "Ibrahima Diallo", iconColor: "text-[#d4af37]", subject: "Question parfums", date: "17/09", time: "14:22" },
+                { sender: "Oumou Sow", iconColor: "text-[#d4af37]", subject: "Demande d'infos", date: "16/09", time: "11:18" },
+              ].map((msg, i) => (
+                <div key={i} className="grid grid-cols-[1fr_1fr_90px] gap-3 py-3 hover:bg-[#d4af37]/5 transition-colors items-center text-[12.5px]">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <div className="w-6 h-6 rounded-full bg-[#0a0a0a] border border-[#d4af37]/30 flex items-center justify-center shrink-0">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={`w-3 h-3 ${msg.iconColor}`}><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+                    </div>
+                    <span className="text-[#e8e1d3] truncate">{msg.sender}</span>
+                  </div>
+                  <span className="text-[#a89b82] truncate">{msg.subject}</span>
+                  <div className="flex flex-col text-[#a89b82]">
+                    <span className="text-[11px]">{msg.date}</span>
+                    <span className="text-[10px] opacity-70">{msg.time}</span>
                   </div>
                 </div>
               ))}
@@ -291,109 +361,12 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* ROW 4: TABLES */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-          {/* Latest Orders */}
-          <div className="bg-[#14120f] border border-[#d4af37]/20 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-[#e8e1d3]">Dernières commandes</h2>
-              <Link href="#" className="text-xs text-[#d4af37] hover:underline">Voir tout</Link>
-            </div>
-            
-            <div className="w-full overflow-x-auto">
-              <table className="w-full text-left text-sm border-collapse">
-                <thead>
-                  <tr className="text-[#a89b82] border-b border-[#d4af37]/20 text-[11px]">
-                    <th className="pb-3 font-normal uppercase tracking-wider">N° commande</th>
-                    <th className="pb-3 font-normal uppercase tracking-wider">Client</th>
-                    <th className="pb-3 font-normal uppercase tracking-wider">Montant</th>
-                    <th className="pb-3 font-normal uppercase tracking-wider">Statut</th>
-                    <th className="pb-3 font-normal uppercase tracking-wider">Date</th>
-                    <th className="pb-3 font-normal"></th>
-                  </tr>
-                </thead>
-                <tbody className="text-[#e8e1d3] text-[13px]">
-                  {[
-                    { id: "#1024", client: "Ahmed Fall", amount: "28 500 FCFA", status: "En préparation", sColor: "bg-[#d4af37]/20 text-[#d4af37] border-[#d4af37]/30", date: "18/09/2025" },
-                    { id: "#1023", client: "Awa Sarr", amount: "45 000 FCFA", status: "Confirmée", sColor: "bg-[#2ecc71]/20 text-[#2ecc71] border-[#2ecc71]/30", date: "18/09/2025" },
-                    { id: "#1022", client: "Cheikh Diop", amount: "32 000 FCFA", status: "Expédiée", sColor: "bg-[#3498db]/20 text-[#3498db] border-[#3498db]/30", date: "17/09/2025" },
-                    { id: "#1021", client: "Fatou Ndiaye", amount: "18 900 FCFA", status: "Livrée", sColor: "bg-[#2ecc71]/20 text-[#2ecc71] border-[#2ecc71]/30", date: "16/09/2025" },
-                    { id: "#1020", client: "Moustapha Ba", amount: "52 000 FCFA", status: "En attente", sColor: "bg-[#95a5a6]/20 text-[#95a5a6] border-[#95a5a6]/30", date: "16/09/2025" },
-                  ].map((order, i) => (
-                    <tr key={i} className="border-b border-[#d4af37]/10 last:border-0 hover:bg-[#d4af37]/5 transition-colors">
-                      <td className="py-3.5 font-medium">{order.id}</td>
-                      <td className="py-3.5">{order.client}</td>
-                      <td className="py-3.5 whitespace-nowrap">{order.amount}</td>
-                      <td className="py-3.5">
-                        <span className={`px-2.5 py-1 text-[10px] rounded-full border ${order.sColor}`}>
-                          {order.status}
-                        </span>
-                      </td>
-                      <td className="py-3.5 text-[#a89b82]">{order.date}</td>
-                      <td className="py-3.5 text-right">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4 text-[#d4af37] inline-block cursor-pointer"><path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Messages */}
-          <div className="bg-[#14120f] border border-[#d4af37]/20 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-[#e8e1d3]">Messages reçus</h2>
-              <Link href="#" className="text-xs text-[#d4af37] hover:underline">Voir tout</Link>
-            </div>
-            
-            <div className="w-full overflow-x-auto">
-              <table className="w-full text-left text-sm border-collapse">
-                <thead>
-                  <tr className="text-[#a89b82] border-b border-[#d4af37]/20 text-[11px]">
-                    <th className="pb-3 font-normal uppercase tracking-wider">Expéditeur</th>
-                    <th className="pb-3 font-normal uppercase tracking-wider">Sujet</th>
-                    <th className="pb-3 font-normal uppercase tracking-wider">Date</th>
-                  </tr>
-                </thead>
-                <tbody className="text-[#e8e1d3] text-[13px]">
-                  {[
-                    { sender: "Awa Sarr", iconColor: "text-[#d4af37]", subject: "Renseignement produit", date: "18/09/2025", time: "09:12" },
-                    { sender: "Mamadou Diop", iconColor: "text-[#2ecc71]", subject: "Livraison commande", date: "18/09/2025", time: "08:45" },
-                    { sender: "Fatou Ndiaye", iconColor: "text-[#d4af37]", subject: "Problème de commande", date: "17/09/2025", time: "16:30" },
-                    { sender: "Ibrahima Diallo", iconColor: "text-[#d4af37]", subject: "Question sur les parfums", date: "17/09/2025", time: "14:22" },
-                    { sender: "Oumou Sow", iconColor: "text-[#d4af37]", subject: "Demande d'informations", date: "16/09/2025", time: "11:18" },
-                  ].map((msg, i) => (
-                    <tr key={i} className="border-b border-[#d4af37]/10 last:border-0 hover:bg-[#d4af37]/5 transition-colors">
-                      <td className="py-3.5">
-                        <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 rounded-full bg-[#14120f] border border-[#d4af37]/30 flex items-center justify-center shrink-0">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={`w-3 h-3 ${msg.iconColor}`}><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
-                          </div>
-                          <span>{msg.sender}</span>
-                        </div>
-                      </td>
-                      <td className="py-3.5 text-[#a89b82] truncate max-w-[150px]">{msg.subject}</td>
-                      <td className="py-3.5">
-                        <div className="flex items-center gap-2 text-[#a89b82]">
-                          <span>{msg.date}</span>
-                          <span className="text-[11px] opacity-70">{msg.time}</span>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
         {/* ROW 5: BOTTOM WIDGETS */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
           {/* Répartition des clients */}
-          <div className="bg-[#14120f] border border-[#d4af37]/20 rounded-xl p-6">
-            <h2 className="text-sm font-bold text-[#e8e1d3] mb-6">Répartition des clients</h2>
-            <div className="flex items-center gap-6">
+          <div className="bg-[#14120f] border border-[#d4af37]/20 rounded-xl p-5 flex flex-col">
+            <h2 className="text-sm font-bold text-[#e8e1d3] mb-5">Répartition des clients</h2>
+            <div className="flex items-center gap-5 flex-1">
               <div className="relative w-24 h-24 shrink-0">
                 <svg viewBox="0 0 36 36" className="w-full h-full transform -rotate-90">
                   <path className="text-[#14120f] border border-[#d4af37]/20" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3" />
@@ -409,18 +382,18 @@ export default function AdminDashboardPage() {
                   <span className="text-[9px] text-[#a89b82]">Clients</span>
                 </div>
               </div>
-              <div className="flex flex-col gap-2 flex-1">
+              <div className="flex flex-col gap-2.5 flex-1">
                 <div className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-[#d4af37]"></div><span className="text-[#a89b82]">Actifs</span></div>
-                  <div><span className="font-medium">982</span> <span className="text-[#a89b82]">(79%)</span></div>
+                  <div><span className="font-semibold">982</span> <span className="text-[#a89b82] text-[10px]">(79%)</span></div>
                 </div>
                 <div className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-[#95a5a6]"></div><span className="text-[#a89b82]">Inactifs</span></div>
-                  <div><span className="font-medium">178</span> <span className="text-[#a89b82]">(14%)</span></div>
+                  <div><span className="font-semibold">178</span> <span className="text-[#a89b82] text-[10px]">(14%)</span></div>
                 </div>
                 <div className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-[#e74c3c]"></div><span className="text-[#a89b82]">Bloqués</span></div>
-                  <div><span className="font-medium">88</span> <span className="text-[#a89b82]">(7%)</span></div>
+                  <div><span className="font-semibold">88</span> <span className="text-[#a89b82] text-[10px]">(7%)</span></div>
                 </div>
               </div>
             </div>
@@ -578,7 +551,7 @@ export default function AdminDashboardPage() {
               <span className="font-sans text-[6px] text-[#d4af37] uppercase tracking-[0.3em] font-medium opacity-80">Thiouraye - Dakar</span>
             </div>
           </div>
-          <p className="text-[#d4af37] text-xs font-serif italic mb-6 z-10">"L'élégance au service de vos sens"</p>
+          <p className="text-[#d4af37] text-xs font-serif italic mb-6 z-10">&quot;L&apos;élégance au service de vos sens&quot;</p>
           <button className="z-10 bg-transparent border border-[#d4af37] text-[#d4af37] rounded-full px-5 py-2 text-[10px] font-semibold tracking-wide hover:bg-[#d4af37] hover:text-[#0a0a0a] transition-colors flex items-center gap-2 uppercase">
             Gérer le contenu du site
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3 h-3"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
