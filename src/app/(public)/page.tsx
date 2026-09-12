@@ -18,7 +18,9 @@ export default async function HomePage() {
       <div className="w-full lg:hidden pb-24">
         <MobileHero />
         <MobileBenefits />
-        <MobileCategories />
+        <Suspense fallback={<div className="h-20" />}>
+          <MobileCategories />
+        </Suspense>
         <Suspense fallback={<div className="h-20" />}>
           <MobileFilterBar />
         </Suspense>

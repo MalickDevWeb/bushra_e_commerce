@@ -15,11 +15,15 @@ export default async function BoutiquePage() {
 
   return (
     <>
-      <DesktopBoutique products={products} />
+      <Suspense fallback={<div className="hidden lg:block min-h-screen" />}>
+        <DesktopBoutique products={products} />
+      </Suspense>
       <div className="w-full lg:hidden pb-24">
         <MobileHero />
         <MobileBenefits />
-        <MobileCategories />
+        <Suspense fallback={<div className="h-20" />}>
+          <MobileCategories />
+        </Suspense>
         <Suspense fallback={<div className="h-20" />}>
           <MobileFilterBar />
         </Suspense>
