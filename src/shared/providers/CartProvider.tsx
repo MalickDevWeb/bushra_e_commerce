@@ -12,7 +12,7 @@ export interface CartItem {
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (item: Omit<CartItem, "quantity">) => void;
+  addToCart: (item: Omit<CartItem, "quantity"> & { quantity?: number }) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
@@ -50,15 +50,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [items, isLoaded]);
 
-  const addToCart = (product: Omit<CartItem, "quantity">) => {
+  const addToCart = (product: Omit<CartItem, "quantity"> & { quantity?: number }) => {
+    const qtyToAdd = product.quantity || 1;
+    
     setItems((prev) => {
       const existing = prev.find((i) => i.id === product.id);
       if (existing) {
         return prev.map((i) =>
-          i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i
+          i.id === product.id ? { ...i, quantity: i.quantity + qtyToAdd } : i
         );
       }
-      return [...prev, { ...product, quantity: 1 }];
+      const { quantity, ...rest } = product as any;
+      return [...prev, { ...rest, quantity: qtyToAdd }];
     });
     
     toast.success(`${product.name} ajouté au panier`, {

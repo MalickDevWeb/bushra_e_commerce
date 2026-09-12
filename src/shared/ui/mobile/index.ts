@@ -9,3 +9,4 @@ export { MobileFilterBar } from "./MobileFilterBar";
 export { MobileProductGrid } from "./MobileProductGrid";
 export { MobileDeliveryBanner } from "./MobileDeliveryBanner";
 export { DesktopHero } from "./DesktopHero";
+export * from "./MobileProductDetail";

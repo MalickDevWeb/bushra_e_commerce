@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ROUTES } from "@/shared/constants/config";
 import { DesktopSidebarShell } from "@/shared/layouts/DesktopSidebarShell";
 
-export function DesktopHome() {
+export function DesktopHome({ products }: { products?: any[] }) {
   return (
     <div className="hidden lg:block">
       <DesktopSidebarShell>

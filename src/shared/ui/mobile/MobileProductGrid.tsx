@@ -1,12 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useCart } from "@/shared/providers/CartProvider";
 import { useFavorites } from "@/shared/providers/FavoritesProvider";
-import { MOCK_PRODUCTS } from "@/shared/data/products";
 
-export function MobileProductGrid() {
+export function MobileProductGrid({ products }: { products: any[] }) {
   const { addToCart } = useCart();
   const { isFavorite, toggleFavorite } = useFavorites();
   const searchParams = useSearchParams();
@@ -14,10 +14,10 @@ export function MobileProductGrid() {
   const sortFilter = searchParams.get("sort");
   const searchQuery = searchParams.get("q");
 
-  let filteredProducts = [...MOCK_PRODUCTS];
+  let filteredProducts = [...products];
 
   if (categoryFilter) {
-    filteredProducts = filteredProducts.filter((p) => p.category === categoryFilter);
+    filteredProducts = filteredProducts.filter((p) => p.category?.slug === categoryFilter || p.category === categoryFilter);
   }
   
   if (searchQuery) {
@@ -53,11 +53,13 @@ export function MobileProductGrid() {
                   NOUVEAU
                 </span>
               )}
-              <div className="relative mb-3 aspect-square w-full overflow-hidden rounded-[8px] bg-white/5">
-                <Image src={product.image} alt={product.name} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover" />
-              </div>
-              <h3 className="text-[0.95rem] font-medium text-[#e8e1d3] mb-1">{product.name}</h3>
-              <p className="mb-3 text-[1.05rem] font-semibold text-[#d4af37]">{product.price.toLocaleString("fr-FR")} FCFA</p>
+              <Link href={`/produit/${product.id}`} className="block">
+                <div className="relative mb-3 aspect-square w-full overflow-hidden rounded-[8px] bg-white/5">
+                  <Image src={product.image} alt={product.name} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover" />
+                </div>
+                <h3 className="text-[0.95rem] font-medium text-[#e8e1d3] mb-1">{product.name}</h3>
+                <p className="mb-3 text-[1.05rem] font-semibold text-[#d4af37]">{product.price.toLocaleString("fr-FR")} FCFA</p>
+              </Link>
               
               <button 
                 onClick={() => addToCart({ id: product.id, name: product.name, price: product.price, image: product.image })}

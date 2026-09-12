@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { getProducts } from "@/app/actions/product.actions";
 import {
   MobileBenefits,
   MobileHero,
@@ -9,10 +10,12 @@ import {
 } from "@/shared/ui/mobile";
 import { DesktopBoutique } from "@/shared/ui/DesktopBoutique";
 
-export default function BoutiquePage() {
+export default async function BoutiquePage() {
+  const products = await getProducts();
+
   return (
     <>
-      <DesktopBoutique />
+      <DesktopBoutique products={products} />
       <div className="w-full lg:hidden pb-24">
         <MobileHero />
         <MobileBenefits />
@@ -21,7 +24,7 @@ export default function BoutiquePage() {
           <MobileFilterBar />
         </Suspense>
         <Suspense fallback={<div className="min-h-[400px] flex justify-center py-10"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#d4af37]"></div></div>}>
-          <MobileProductGrid />
+          <MobileProductGrid products={products} />
         </Suspense>
         <MobileDeliveryBanner />
       </div>

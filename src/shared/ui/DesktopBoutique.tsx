@@ -7,21 +7,18 @@ import { ROUTES } from "@/shared/constants/config";
 import { DesktopSidebarShell } from "@/shared/layouts/DesktopSidebarShell";
 import { useCart } from "@/shared/providers/CartProvider";
 import { useFavorites } from "@/shared/providers/FavoritesProvider";
-import { MOCK_PRODUCTS } from "@/shared/data/products";
 
-export function DesktopBoutique() {
+export function DesktopBoutique({ products }: { products: any[] }) {
   const { addToCart } = useCart();
   const { isFavorite, toggleFavorite } = useFavorites();
   const searchParams = useSearchParams();
   const categoryFilter = searchParams.get("category");
   const searchQuery = searchParams.get("q");
   
-  let filteredProducts = [...MOCK_PRODUCTS];
+  let filteredProducts = categoryFilter 
+    ? products.filter(p => p.category?.slug === categoryFilter || p.category === categoryFilter)
+    : [...products];
 
-  if (categoryFilter) {
-    filteredProducts = filteredProducts.filter((p) => p.category === categoryFilter);
-  }
-  
   if (searchQuery) {
     filteredProducts = filteredProducts.filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
   }
@@ -105,24 +102,26 @@ export function DesktopBoutique() {
               ) : (
                 filteredProducts.map((p) => (
                   <div key={p.id} className="group border border-[#d4af37]/30 rounded-2xl p-4 bg-[#0c0a07] hover:border-[#d4af37]/60 transition-colors">
-                    <div className="relative h-[220px] rounded-xl overflow-hidden mb-4 bg-[#1a1a1a]">
-                      <Image src={p.image} alt={p.name} fill sizes="(max-width: 1200px) 33vw, 25vw" className="object-cover group-hover:scale-105 transition-transform duration-500" />
-                      {p.isNew && (
-                        <span className="absolute top-3 left-3 bg-[#0a0a0a]/80 backdrop-blur border border-[#d4af37]/50 text-[#d4af37] text-[9px] font-bold px-2 py-1 rounded uppercase tracking-wider">
-                          NOUVEAU
-                        </span>
-                      )}
-                      <button 
-                        onClick={() => toggleFavorite(p.id, p.name)}
-                        className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[#0a0a0a]/80 backdrop-blur border border-[#d4af37]/30 flex items-center justify-center text-[#a89b82] hover:text-[#d4af37] transition-colors"
-                      >
-                        <svg viewBox="0 0 24 24" fill={isFavorite(p.id) ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.5" className="w-4 h-4">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                        </svg>
-                      </button>
-                    </div>
-                    <h4 className="font-serif text-[#e8e1d3] text-sm mb-1">{p.name}</h4>
-                    <p className="text-[#a89b82] text-[10px] mb-3">{p.category}</p>
+                    <Link href={`/produit/${p.id}`} className="block">
+                      <div className="relative h-[220px] rounded-xl overflow-hidden mb-4 bg-[#1a1a1a]">
+                        <Image src={p.image} alt={p.name} fill sizes="(max-width: 1200px) 33vw, 25vw" className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                        {p.isNew && (
+                          <span className="absolute top-3 left-3 bg-[#0a0a0a]/80 backdrop-blur border border-[#d4af37]/50 text-[#d4af37] text-[9px] font-bold px-2 py-1 rounded uppercase tracking-wider">
+                            NOUVEAU
+                          </span>
+                        )}
+                        <button 
+                          onClick={(e) => { e.preventDefault(); toggleFavorite(p.id, p.name); }}
+                          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[#0a0a0a]/80 backdrop-blur border border-[#d4af37]/30 flex items-center justify-center text-[#a89b82] hover:text-[#d4af37] transition-colors"
+                        >
+                          <svg viewBox="0 0 24 24" fill={isFavorite(p.id) ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.5" className="w-4 h-4">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                          </svg>
+                        </button>
+                      </div>
+                      <h4 className="font-serif text-[#e8e1d3] text-sm mb-1">{p.name}</h4>
+                      <p className="text-[#a89b82] text-[10px] mb-3 capitalize">{p.category?.name || p.category}</p>
+                    </Link>
                     <div className="flex items-center justify-between">
                       <p className="text-[#d4af37] font-semibold text-sm">{p.price.toLocaleString("fr-FR")} FCFA</p>
                       <button 
