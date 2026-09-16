@@ -6,13 +6,23 @@ import { useRouter } from "next/navigation";
 
 import { useCart } from "@/shared/providers/CartProvider";
 import { useFavorites } from "@/shared/providers/FavoritesProvider";
-import { ROUTES } from "@/shared/constants/config";
 
-export function MobileProductDetail({ product }: { product: any }) {
+interface ProductDetailData {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  image2?: string | null;
+  image3?: string | null;
+  isNew?: boolean;
+}
+
+export function MobileProductDetail({ product }: { product: ProductDetailData | null }) {
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
   const { toggleFavorite, isFavorite } = useFavorites();
+  const [activeImage, setActiveImage] = useState(product?.image ?? "/images/product_1.jpg");
 
   if (!product) return <div className="text-white p-10 mt-10">Produit non trouvé</div>;
 
@@ -24,11 +34,11 @@ export function MobileProductDetail({ product }: { product: any }) {
     <div className="w-full lg:hidden pb-32">
       {/* Top Navigation */}
       <div className="fixed top-0 left-0 right-0 z-40 bg-[#090705]/80 backdrop-blur-md px-4 py-4 flex items-center justify-between border-b border-[#d4af37]/10">
-        <button onClick={() => router.back()} className="w-10 h-10 flex items-center justify-center bg-[#14120f] border border-[#d4af37]/30 rounded-full text-[#d4af37]">
+        <button type="button" aria-label="Retour" onClick={() => router.back()} className="w-10 h-10 flex items-center justify-center bg-[#14120f] border border-[#d4af37]/30 rounded-full text-[#d4af37]">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
         </button>
         <div className="flex gap-3">
-          <button onClick={() => toggleFavorite(product.id, product.name)} className={`w-10 h-10 flex items-center justify-center rounded-full border transition-colors ${isFavorite(product.id) ? 'bg-[#d4af37]/20 border-[#d4af37] text-[#d4af37]' : 'bg-[#14120f] border-[#d4af37]/30 text-[#e8e1d3]'}`}>
+          <button type="button" aria-label={isFavorite(product.id) ? "Retirer des favoris" : "Ajouter aux favoris"} onClick={() => toggleFavorite(product.id, product.name)} className={`w-10 h-10 flex items-center justify-center rounded-full border transition-colors ${isFavorite(product.id) ? 'bg-[#d4af37]/20 border-[#d4af37] text-[#d4af37]' : 'bg-[#14120f] border-[#d4af37]/30 text-[#e8e1d3]'}`}>
             <svg viewBox="0 0 24 24" fill={isFavorite(product.id) ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.5" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
           </button>
         </div>
@@ -36,11 +46,20 @@ export function MobileProductDetail({ product }: { product: any }) {
 
       {/* Image Area */}
       <div className="relative w-full aspect-[4/5] bg-white/5 mt-[73px]">
-        <Image src={product.image} alt={product.name} fill className="object-cover" priority />
+        <Image src={activeImage} alt={product.name} fill className="object-cover" priority />
         {product.isNew && (
           <div className="absolute top-4 left-4 px-3 py-1 bg-[#d4af37] text-[#090705] text-xs font-bold uppercase tracking-widest rounded-full">Nouveau</div>
         )}
       </div>
+      {[product.image2, product.image3].filter(Boolean).length > 0 && (
+        <div className="flex gap-2 px-5 pt-3">
+          {[product.image, product.image2, product.image3].filter((image): image is string => Boolean(image)).map((image) => (
+            <button type="button" key={image} onClick={() => setActiveImage(image)} className={`relative h-16 w-16 overflow-hidden rounded border ${activeImage === image ? "border-[#d4af37]" : "border-[#d4af37]/20"}`}>
+              <Image src={image} alt="" fill className="object-cover" />
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Product Details */}
       <div className="px-5 py-6">
@@ -69,11 +88,11 @@ export function MobileProductDetail({ product }: { product: any }) {
       {/* Floating Action Bar */}
       <div className="fixed bottom-[4.5rem] left-0 right-0 p-4 bg-[#090705]/90 backdrop-blur-lg border-t border-[#d4af37]/20 z-40 flex items-center gap-4">
         <div className="flex items-center border border-[#d4af37]/40 rounded-lg bg-[#14120f] h-12">
-          <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 flex items-center justify-center text-[#e8e1d3]">-</button>
+          <button type="button" aria-label="Diminuer la quantité" onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 flex items-center justify-center text-[#e8e1d3]">-</button>
           <span className="w-8 text-center text-[#e8e1d3] font-medium">{quantity}</span>
-          <button onClick={() => setQuantity(quantity + 1)} className="w-10 flex items-center justify-center text-[#e8e1d3]">+</button>
+          <button type="button" aria-label="Augmenter la quantité" onClick={() => setQuantity(quantity + 1)} className="w-10 flex items-center justify-center text-[#e8e1d3]">+</button>
         </div>
-        <button onClick={handleAddToCart} className="flex-1 h-12 bg-gradient-to-r from-[#d4af37] to-[#c59b32] text-[#090705] font-semibold rounded-lg shadow-lg flex items-center justify-center gap-2">
+        <button type="button" onClick={handleAddToCart} className="flex-1 h-12 bg-gradient-to-r from-[#d4af37] to-[#c59b32] text-[#090705] font-semibold rounded-lg shadow-lg flex items-center justify-center gap-2">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>
           Ajouter
         </button>

@@ -12,28 +12,24 @@ interface FavoritesContextType {
 const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
-  const [favorites, setFavorites] = useState<string[]>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    if (typeof window === "undefined") return [];
 
-  // Load from local storage
-  useEffect(() => {
     const savedFavorites = localStorage.getItem("bushra_favorites");
-    if (savedFavorites) {
-      try {
-        setFavorites(JSON.parse(savedFavorites));
-      } catch (e) {
-        console.error("Failed to parse favorites", e);
-      }
+    if (!savedFavorites) return [];
+
+    try {
+      return JSON.parse(savedFavorites) as string[];
+    } catch (error) {
+      console.error("Failed to parse favorites", error);
+      return [];
     }
-    setIsLoaded(true);
-  }, []);
+  });
 
   // Save to local storage
   useEffect(() => {
-    if (isLoaded) {
-      localStorage.setItem("bushra_favorites", JSON.stringify(favorites));
-    }
-  }, [favorites, isLoaded]);
+    localStorage.setItem("bushra_favorites", JSON.stringify(favorites));
+  }, [favorites]);
 
   const toggleFavorite = (id: string, name: string) => {
     setFavorites((prev) => {

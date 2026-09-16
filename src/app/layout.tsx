@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import { APP_DESCRIPTION, APP_NAME } from "@/shared/constants/config";
-import { PwaRegistration } from "@/shared/providers/PwaRegistration";
 import { CartProvider } from "@/shared/providers/CartProvider";
 import { FavoritesProvider } from "@/shared/providers/FavoritesProvider";
 import { Toaster } from "sonner";
@@ -30,7 +29,6 @@ export default function RootLayout({
   return (
     <html lang="fr" className="h-full" suppressHydrationWarning>
       <body className="min-h-full bg-background text-foreground antialiased" suppressHydrationWarning>
-        <PwaRegistration />
         <FavoritesProvider>
           <CartProvider>
             {children}

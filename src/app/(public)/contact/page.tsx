@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { ContactInfo } from "./components/ContactInfo";
-import { ContactForm } from "./components/ContactForm";
-import { DesktopContact } from "@/shared/ui/DesktopContact";
+import { ContactInfo } from "@/modules/content/ui/contact/ContactInfo";
+import { ContactForm } from "@/modules/content/ui/contact/ContactForm";
+import { DesktopContact } from "@/modules/content/ui/contact/DesktopContact";
 
 export default function ContactPage() {
   return (

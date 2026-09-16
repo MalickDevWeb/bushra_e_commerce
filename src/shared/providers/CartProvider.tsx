@@ -26,15 +26,15 @@ import { toast } from "sonner";
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
-  const [isMounted, setIsMounted] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Load from local storage
   useEffect(() => {
-    setIsMounted(true);
     const savedCart = localStorage.getItem("bushra_cart");
     if (savedCart) {
       try {
+        // Hydrate client state from browser storage after SSR.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setItems(JSON.parse(savedCart));
       } catch (e) {
         console.error("Failed to parse cart", e);
@@ -60,8 +60,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           i.id === product.id ? { ...i, quantity: i.quantity + qtyToAdd } : i
         );
       }
-      const { quantity, ...rest } = product as any;
-      return [...prev, { ...rest, quantity: qtyToAdd }];
+      return [
+        ...prev,
+        {
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          quantity: qtyToAdd,
+        },
+      ];
     });
     
     toast.success(`${product.name} ajouté au panier`, {

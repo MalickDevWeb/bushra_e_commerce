@@ -1,6 +1,6 @@
 # Bushra
 
-Application **Next.js** modulaire, orientée performance, avec séparation claire **frontend / backend** et couches **core**, **shared**, **utils**.
+Application **Next.js** modulaire pour Bushra Thiouraye, avec les routes dans `app`, les domaines dans `modules`, les éléments transversaux dans `shared` et les fonctions pures dans `utils`.
 
 ## Prérequis
 
@@ -18,67 +18,86 @@ Ouvrir [http://localhost:3000](http://localhost:3000).
 
 ```
 src/
-├── app/                      # Couche Next.js (routing)
-│   ├── (frontend)/           # Pages UI (Server Components)
-│   │   ├── layout.tsx
-│   │   ├── page.tsx
-│   │   └── users/page.tsx
-│   ├── api/v1/               # Backend (Route Handlers)
-│   │   ├── health/route.ts
-│   │   └── users/route.ts
+├── app/                      # Routes, layouts et fichiers spéciaux Next.js
+│   ├── (public)/             # Boutique et parcours client
+│   ├── admin/                 # Routes d'administration
+│   ├── (dashboard)/           # Routes du dashboard métier
+│   ├── api/                   # Route Handlers API
 │   ├── layout.tsx
 │   └── globals.css
 │
-├── core/                     # Logique métier (sans React)
-│   ├── api/                  # Helpers HTTP (réponses JSON)
-│   └── modules/
-│       └── user/             # Module métier exemple
-│           ├── user.types.ts
-│           ├── user.repository.ts
-│           └── user.service.ts
+├── modules/                  # Fonctionnalités organisées par domaine
+│   ├── admin/                # Interfaces d'administration
+│   ├── catalog/              # Produits, catégories et stocks
+│   ├── clients/              # Clients, avis et messages
+│   ├── communication/        # Campagnes, newsletter et notifications
+│   ├── content/              # Contenu public et actions produit
+│   ├── dashboard/            # Widgets du tableau de bord
+│   └── orders/               # Commandes, paiements et livraisons
 │
-├── shared/                   # Code partagé frontend + backend
-│   ├── components/
+├── core/                     # Infrastructure sans React
+│   ├── config/
+│   ├── database/
+│   ├── errors/
+│   ├── http/
+│   └── types/
+│
+├── shared/                   # Éléments réutilisables entre domaines
+│   ├── layouts/
+│   ├── providers/
+│   ├── ui/                   # Primitives UI et composants transversaux
 │   ├── constants/
 │   └── types/
 │
-└── utils/                    # Fonctions pures réutilisables
+└── utils/                    # Fonctions pures sans dépendance métier
     ├── cn.ts
-    ├── format.ts
-    └── validation.ts
+    ├── date/
+    ├── number/
+    └── validation/
 ```
 
 ## Principes
 
 | Couche | Rôle | Importable depuis |
 |--------|------|-------------------|
-| **app/(frontend)** | Pages, layouts, UI server-side | `core`, `shared`, `utils` |
-| **app/api** | Endpoints REST | `core`, `shared`, `utils` |
-| **core** | Domaine, services, repositories | `utils` uniquement |
-| **shared** | Composants, types, constantes | `utils` |
+| **app** | Routes et composition Next.js | `modules`, `core`, `shared`, `utils` |
+| **modules** | UI et logique propres à un domaine | `core`, `shared`, `utils` |
+| **app/api** | Route Handlers et contrats HTTP | `modules`, `core`, `shared`, `utils` |
+| **core** | Infrastructure et logique sans React | `utils` uniquement |
+| **shared** | Composants, layouts et providers transversaux | `utils` |
 | **utils** | Helpers purs, sans dépendances métier | — |
 
 ### Flux de données performant
 
-1. **Server Components** appellent directement `core` (pas de round-trip HTTP interne).
-2. **Route Handlers** (`/api/v1/*`) exposent la même logique pour clients externes ou fetch côté client.
-3. **`revalidate`** sur les pages pour le cache ISR.
+1. Les routes `app` composent les écrans et délèguent le comportement aux modules.
+2. Les Server Components appellent directement les actions et services nécessaires.
+3. Les Route Handlers exposent les contrats destinés aux clients externes.
+4. Le service worker et son cache applicatif sont désactivés ; le cache serveur Next.js reste indépendant.
 
 ## Alias TypeScript
 
 ```ts
-import { userService } from "@/core/modules/user";
-import { Button } from "@/shared/components";
-import { formatDate } from "@/utils/format";
+import { getProducts } from "@/modules/content/actions/product.actions";
+import { DesktopBoutique } from "@/modules/catalog/ui/boutique/DesktopBoutique";
+import { Button } from "@/shared/ui/Button";
+import { formatCurrency } from "@/utils/number/formatCurrency";
 ```
 
 ## API
 
 | Méthode | Route | Description |
 |---------|-------|-------------|
-| GET | `/api/v1/health` | Santé de l'application |
-| GET | `/api/v1/users` | Liste des utilisateurs |
-| POST | `/api/v1/users` | Créer un utilisateur |
+| `POST` | `/api/orders` | Créer une commande avec calcul serveur et réservation atomique du stock |
+| `GET` | `/api/orders` | Lister les commandes pour un administrateur authentifié |
+| `GET` | `/api/orders/:orderNumber` | Consulter le suivi public d'une commande |
+| `POST` | `/api/payments/webhook` | Confirmer un paiement via webhook protégé par `PAYMENT_WEBHOOK_SECRET` |
+| `POST` | `/api/contact` | Enregistrer un message client |
+| `POST` | `/api/newsletter` | Inscrire une adresse à la newsletter |
+
+Les Server Actions couvrent également les clients, avis, médias, livraisons et réglages CMS. Les intégrations Wave et Orange Money doivent fournir leurs clés et appeler le webhook de paiement.
+Les Route Handlers sont regroupés dans `src/app/api`. Le dossier `api/students` est réservé à l'API étudiants en cours d'implémentation.
+
+Après modification du schéma Prisma, synchroniser la base de développement avec `npx prisma db push` ou créer une migration de production avec `npx prisma migrate dev --name backend-domain-foundation`.
 
 ## Scripts
 
@@ -89,13 +108,15 @@ import { formatDate } from "@/utils/format";
 | `npm run start` | Serveur production |
 | `npm run lint` | ESLint |
 | `npm run typecheck` | Vérification TypeScript |
+| `npm run db:push` | Synchronisation Prisma avec Neon |
 
 ## Ajouter un module métier
 
-1. Créer `src/core/modules/<nom>/` avec `types`, `repository`, `service`.
-2. Exporter depuis `src/core/modules/<nom>/index.ts`.
-3. Ajouter une route API dans `src/app/api/v1/<nom>/`.
-4. Créer la page UI dans `src/app/(frontend)/<nom>/`.
+1. Créer `src/modules/<domaine>/` avec les sous-dossiers utiles : `ui`, `actions`, `services`, `repositories`, `types`.
+2. Garder dans `src/app` uniquement la route Next.js qui compose le module.
+3. Placer les composants réutilisables dans `src/shared/ui` uniquement s'ils servent plusieurs domaines.
+4. Placer les fonctions sans React ni dépendance métier dans `src/utils`.
+5. Ajouter les Route Handlers correspondants dans `src/app/api` si une API externe est nécessaire.
 
 ## Performance
 

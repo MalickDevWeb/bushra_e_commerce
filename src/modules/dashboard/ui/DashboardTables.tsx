@@ -1,0 +1,13 @@
+import Link from "next/link";
+
+type Order = { id: string; orderNumber: string; customerName: string; totalAmount: number; status: string };
+type Message = { id: string; name: string; subject: string | null; createdAt: Date };
+const labels: Record<string, string> = { PENDING: "En attente", PAID: "Confirmée", SHIPPED: "Expédiée", DELIVERED: "Livrée", CANCELLED: "Annulée" };
+
+function DashboardPanel({ title, href, children }: { title: string; href: string; children: React.ReactNode }) {
+  return <div className="bg-[#14120f] border border-[#d4af37]/20 rounded-xl p-5 flex flex-col"><div className="flex items-center justify-between mb-4"><h2 className="text-base font-bold text-[#e8e1d3]">{title}</h2><Link href={href} className="text-xs text-[#d4af37] hover:underline">Voir tout</Link></div>{children}</div>;
+}
+
+export function DashboardTables({ orders, messages }: { orders: Order[]; messages: Message[] }) {
+  return <div className="grid grid-cols-1 xl:grid-cols-2 gap-6"><DashboardPanel title="Dernières commandes" href="/admin/commandes/liste"><div className="grid grid-cols-[100px_1fr_110px_100px] gap-2 pb-2 border-b border-[#d4af37]/20 text-[10px] text-[#a89b82] uppercase tracking-wider"><span>N° cmd</span><span>Client</span><span>Montant</span><span>Statut</span></div><div className="flex flex-col divide-y divide-[#d4af37]/10">{orders.map((order) => <div key={order.id} className="grid grid-cols-[100px_1fr_110px_100px] gap-2 py-3 items-center text-[12.5px]"><span className="font-semibold text-[#d4af37]">{order.orderNumber}</span><span className="text-[#e8e1d3] truncate">{order.customerName}</span><span className="text-[#e8e1d3] font-medium whitespace-nowrap">{order.totalAmount.toLocaleString("fr-FR")} FCFA</span><span className="px-2 py-0.5 text-[9px] rounded-full border border-[#d4af37]/30 text-[#d4af37] w-fit">{labels[order.status] || order.status}</span></div>)}</div></DashboardPanel><DashboardPanel title="Messages reçus" href="/admin/clients/messages"><div className="grid grid-cols-[1fr_1fr_90px] gap-3 pb-2 border-b border-[#d4af37]/20 text-[10px] text-[#a89b82] uppercase tracking-wider"><span>Expéditeur</span><span>Sujet</span><span>Date</span></div><div className="flex flex-col divide-y divide-[#d4af37]/10">{messages.map((message) => <div key={message.id} className="grid grid-cols-[1fr_1fr_90px] gap-3 py-3 items-center text-[12.5px]"><span className="text-[#e8e1d3] truncate">{message.name}</span><span className="text-[#a89b82] truncate">{message.subject || "Sans sujet"}</span><span className="text-[10px] text-[#a89b82]">{new Date(message.createdAt).toLocaleDateString("fr-FR")}</span></div>)}</div></DashboardPanel></div>;
+}

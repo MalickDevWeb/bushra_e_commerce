@@ -1,3 +1,7 @@
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
+
 const benefits = [
   { 
     icon: (
@@ -38,13 +42,32 @@ const benefits = [
 ];
 
 export function MobileBenefits() {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <section aria-label="Les engagements Bushra" className="relative z-10 pl-5 mb-6">
       <div className="hide-scrollbar flex gap-3 overflow-x-auto snap-x snap-mandatory pr-5 pb-2">
         {benefits.map((benefit) => (
           <div key={benefit.label} className="snap-start flex flex-col items-center justify-center min-w-[120px] rounded-[14px] border border-[#d4af37]/30 bg-[#0c0a07]/80 py-4 px-2 shadow-[0_4px_15px_rgba(0,0,0,0.4)] backdrop-blur-md">
-            <span className="flex items-center justify-center text-[#d4af37] mb-2" aria-hidden="true">
-              {benefit.icon}
+            <span className={`flex items-center justify-center text-[#d4af37] mb-2 ${benefit.label === "Livraison rapide" ? "benefit-mobile-icon-shell--delivery" : ""}`} aria-hidden="true">
+              {benefit.label === "Livraison rapide" ? (
+                <motion.span
+                  className="benefit-mobile-icon-track"
+                  animate={shouldReduceMotion ? { left: 5 } : {
+                    left: [5, 91, 91, 5],
+                    rotate: [0, -3, 3, 0],
+                    scale: [1, 1.04, 1.04, 1],
+                  }}
+                  transition={{
+                    duration: 3.2,
+                    ease: "linear",
+                    repeat: shouldReduceMotion ? 0 : Infinity,
+                    times: [0, 0.45, 0.55, 1],
+                  }}
+                >
+                  {benefit.icon}
+                </motion.span>
+              ) : benefit.icon}
             </span>
             <p className="text-center text-[0.7rem] font-medium leading-[1.3] text-[#e8e1d3]">
               {benefit.label}

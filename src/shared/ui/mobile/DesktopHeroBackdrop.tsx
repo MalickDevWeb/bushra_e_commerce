@@ -1,0 +1,3 @@
+export function DesktopHeroBackdrop() {
+  return <div className="pointer-events-none absolute inset-0"><div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "linear-gradient(rgba(212,175,55,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(212,175,55,0.6) 1px, transparent 1px)", backgroundSize: "60px 60px" }} /><div className="absolute -left-32 top-1/2 h-[600px] w-[600px] -translate-y-1/2 rounded-full bg-[#d4af37]/6 blur-[120px]" /><div className="absolute right-1/3 top-0 h-[400px] w-[400px] rounded-full bg-[#d4af37]/4 blur-[100px]" /><div className="absolute bottom-0 right-0 h-[300px] w-[300px] rounded-full bg-[#8b6914]/8 blur-[80px]" /></div>;
+}

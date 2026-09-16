@@ -3,18 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack",
-    "build": "next build --webpack",
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:push": "node scripts/db-push.mjs"
   },
   "engines": {
     "node": ">=20.9.0"
   },
   "dependencies": {
     "@prisma/client": "^5.20.0",
+    "bcryptjs": "^3.0.3",
     "cloudinary": "^2.11.0",
+    "framer-motion": "^13.3.0",
+    "jose": "^6.2.12",
+    "lucide-react": "^1.46.0",
     "next": "16.3.4",
     "next-cloudinary": "^6.19.0",
     "react": "19.2.8",
@@ -22,8 +27,10 @@
     "sonner": "^2.0.8"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.6.0",
     "@tailwindcss/oxide-linux-x64-gnu": "^4.1.14",
     "@tailwindcss/postcss": "^4.1.14",
+    "@types/bcryptjs": "^3.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

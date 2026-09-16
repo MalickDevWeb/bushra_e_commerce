@@ -1,6 +1,6 @@
-import { DesktopProduct } from "@/shared/ui";
+import { DesktopProduct } from "@/modules/catalog/ui/product/DesktopProduct";
 import { MobileProductDetail } from "@/shared/ui/mobile";
-import { getProductById } from "@/app/actions/product.actions";
+import { getProductById } from "@/modules/content/actions/product.actions";
 import { notFound } from "next/navigation";
 
 interface ProductPageProps {

@@ -11,14 +11,31 @@ datasource db {
 }
 
 model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  phone         String?
+  name          String?
+  password      String
+  role          String   @default("USER") // USER, ADMIN, SUPER_ADMIN
+  lastLoginAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  orders        Order[]
+  messages      CustomerMessage[]
+  reviews       Review[]
+  wishlist      Wishlist[]
+  metrics       CustomerMetric?
+}
+
+model Wishlist {
   id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  password  String
-  role      String   @default("USER") // USER, ADMIN, SUPER_ADMIN
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  orders    Order[]
+
+  @@unique([userId, productId])
 }
 
 model Category {
@@ -27,6 +44,7 @@ model Category {
   slug        String    @unique
   description String?
   image       String?
+  status      String      @default("DRAFT") // ACTIVE, DRAFT
   products    Product[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -34,18 +52,53 @@ model Category {
 
 model Product {
   id          String      @id @default(cuid())
+  sku         String?     @unique
   name        String
   slug        String      @unique
   description String
   price       Float
   stock       Int         @default(0)
   image       String
+  image2      String?
+  image3      String?
   isNew       Boolean     @default(false)
   categoryId  String
   category    Category    @relation(fields: [categoryId], references: [id])
+  collections Collection[]
   orderItems  OrderItem[]
+  reviews     Review[]
+  wishlists   Wishlist[]
+  metrics     ProductMetric?
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+}
+
+model Collection {
+  id          String      @id @default(cuid())
+  name        String      @unique
+  slug        String      @unique
+  type        String      @default("MANUAL") // MANUAL, AUTO
+  status      String      @default("DRAFT") // ACTIVE, INACTIVE, DRAFT, SCHEDULED
+  scheduledAt DateTime?
+  products    Product[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Promotion {
+  id           String    @id @default(cuid())
+  name         String
+  code         String    @unique
+  type         String    // PERCENTAGE, FIXED_AMOUNT, FREE_SHIPPING
+  value        Float?
+  usageCount   Int       @default(0)
+  usageLimit   Int?
+  startDate    DateTime  @default(now())
+  endDate      DateTime?
+  minimumSpend Float?
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
 model Order {
@@ -59,7 +112,12 @@ model Order {
   notes         String?
   totalAmount   Float
   status        String      @default("PENDING") // PENDING, PAID, SHIPPED, DELIVERED, CANCELLED
+  paymentMethod String      @default("COD") // COD, WAVE, ORANGE_MONEY
+  paymentStatus String      @default("PENDING") // PENDING, PAID, FAILED, REFUNDED
+  deliveryFee   Float       @default(0)
   items         OrderItem[]
+  payments      Payment[]
+  delivery      Delivery?
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 }
@@ -72,4 +130,165 @@ model OrderItem {
   product   Product @relation(fields: [productId], references: [id])
   quantity  Int
   price     Float
+}
+
+model Payment {
+  id            String   @id @default(cuid())
+  orderId       String
+  order         Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  provider      String   // CASH_ON_DELIVERY, WAVE, ORANGE_MONEY
+  status        String   @default("PENDING") // PENDING, PAID, FAILED, REFUNDED
+  amount        Float
+  transactionId String?  @unique
+  metadata      Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Delivery {
+  id             String    @id @default(cuid())
+  orderId        String    @unique
+  order          Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  status         String    @default("PENDING") // PENDING, PREPARING, SHIPPED, DELIVERED, CANCELLED
+  carrier        String?
+  trackingNumber String?   @unique
+  shippedAt      DateTime?
+  deliveredAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model CustomerMessage {
+  id        String    @id @default(cuid())
+  userId    String?
+  user      User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String
+  status    String    @default("NEW") // NEW, READ, REPLIED, ARCHIVED
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  rating    Int
+  comment   String?
+  status    String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MediaAsset {
+  id        String   @id @default(cuid())
+  name      String
+  url       String   @unique
+  mimeType  String?
+  size      Int?
+  alt       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model NewsletterSubscriber {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  status      String   @default("SUBSCRIBED") // SUBSCRIBED, UNSUBSCRIBED
+  subscribedAt DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// --- DATA ENGINE & ANALYTICS ---
+
+model AnalyticsEvent {
+  id          String   @id @default(cuid())
+  userId      String?
+  sessionId   String   
+  eventType   String   // VIEW_PRODUCT, ADD_TO_CART, SEARCH, PURCHASE, EMAIL_OPENED
+  entityId    String?  
+  metadata    Json?    
+  createdAt   DateTime @default(now())
+
+  @@index([userId, eventType])
+  @@index([createdAt])
+}
+
+model CustomerMetric {
+  userId               String   @id
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  recencyScore         Int      @default(0)
+  frequencyScore       Int      @default(0)
+  monetaryScore        Int      @default(0)
+  
+  avgPurchaseInterval  Int?     
+  nextExpectedPurchase DateTime? 
+  churnRiskScore       Float    @default(0.0)
+  
+  preferredCategory    String?
+  customerLifetimeValue Float   @default(0.0)
+  
+  updatedAt            DateTime @updatedAt
+}
+
+model ProductMetric {
+  productId       String   @id
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  viewsCount      Int      @default(0)
+  addToCartCount  Int      @default(0)
+  purchasesCount  Int      @default(0)
+  conversionRate  Float    @default(0.0) 
+  updatedAt       DateTime @updatedAt
+}
+
+// --- CAMPAIGNS & SEGMENTS ---
+
+model CustomerSegment {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  ruleType    String   // DYNAMIC, AUTOMATIC, STATIC
+  rules       Json?    // Conditions (ex: { "category": "Oud", "minOrders": 5 })
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  campaigns   Campaign[]
+}
+
+model Campaign {
+  id          String   @id @default(cuid())
+  name        String
+  channel     String   // WHATSAPP, SMS, EMAIL
+  status      String   @default("DRAFT") // DRAFT, SCHEDULED, ACTIVE, COMPLETED
+  segmentId   String?
+  segment     CustomerSegment? @relation(fields: [segmentId], references: [id])
+  content     String
+  scheduledAt DateTime?
+  conversions Int      @default(0)
+  revenue     Float    @default(0.0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// --- DECISION LOGS ---
+
+model DecisionLog {
+  id              String   @id @default(cuid())
+  recommendationId String
+  actionTaken     String   // IGNORED, SCHEDULED, SENT_NOW
+  details         Json?    // Any extra details (ex: campaignId created)
+  createdAt       DateTime @default(now())
 }

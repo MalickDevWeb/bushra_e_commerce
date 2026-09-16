@@ -1,23 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ROUTES } from "@/shared/constants/config";
 import { useCart } from "@/shared/providers/CartProvider";
 import { useFavorites } from "@/shared/providers/FavoritesProvider";
-import { MOCK_PRODUCTS } from "@/shared/data/products";
+import { MOCK_PRODUCTS } from "@/modules/catalog/data/products";
 import { DesktopSidebarShell } from "@/shared/layouts/DesktopSidebarShell";
 
 export default function FavoritesPage() {
   const { addToCart } = useCart();
   const { favorites, toggleFavorite } = useFavorites();
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    setIsLoaded(true);
-  }, []);
-
   const favoriteProducts = MOCK_PRODUCTS.filter(p => favorites.includes(p.id));
 
   const content = (
@@ -26,16 +19,14 @@ export default function FavoritesPage() {
         Mes <span className="text-[#d4af37]">Favoris</span>
       </h1>
 
-      {!isLoaded ? (
-        <div className="flex-1 flex justify-center items-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#d4af37]"></div></div>
-      ) : favoriteProducts.length === 0 ? (
+      {favoriteProducts.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center border border-[#d4af37]/20 rounded-2xl bg-[#0c0a07] p-8 lg:p-10">
           <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border-2 border-[#d4af37]/20 bg-[#d4af37]/5">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-8 w-8 text-[#d4af37]">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
             </svg>
           </div>
-          <h2 className="font-serif text-2xl text-[#e8e1d3] mb-2 text-center">Vous n'avez pas de favoris</h2>
+          <h2 className="font-serif text-2xl text-[#e8e1d3] mb-2 text-center">Vous n&apos;avez pas de favoris</h2>
           <p className="text-center text-[#a89b82] max-w-sm mb-8">
             Sauvegardez vos articles préférés en cliquant sur l'icône cœur.
           </p>

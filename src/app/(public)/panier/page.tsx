@@ -1,20 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ROUTES } from "@/shared/constants/config";
 import { useCart } from "@/shared/providers/CartProvider";
-import { DesktopCart } from "@/shared/ui/DesktopCart";
+import { DesktopCart } from "@/modules/orders/ui/cart/DesktopCart";
 
 export default function CartPage() {
   const { items, removeFromCart, updateQuantity, totalPrice } = useCart();
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    setIsLoaded(true);
-  }, []);
-
   return (
     <>
       <DesktopCart />
@@ -24,9 +17,7 @@ export default function CartPage() {
           Mon <span className="text-[#d4af37]">Panier</span>
         </h1>
 
-        {!isLoaded ? (
-          <div className="min-h-[40vh] flex justify-center items-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#d4af37]"></div></div>
-        ) : items.length === 0 ? (
+        {items.length === 0 ? (
           <div className="flex min-h-[40vh] flex-col items-center justify-center px-4">
             <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full border-2 border-[#d4af37]/20 bg-[#d4af37]/5">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="h-10 w-10 text-[#d4af37]">
@@ -35,7 +26,7 @@ export default function CartPage() {
             </div>
             <h2 className="font-serif text-[1.5rem] text-[#e8e1d3]">Votre panier est vide</h2>
             <p className="mt-2 text-center text-[#a89b82] max-w-md">
-              Découvrez nos collections exceptionnelles d'encensoirs et de parfums.
+              Découvrez nos collections exceptionnelles d&apos;encensoirs et de parfums.
             </p>
             <Link
               href={ROUTES.shop}

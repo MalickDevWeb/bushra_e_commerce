@@ -1,9 +1,9 @@
-import { TrackingHero } from "./components/TrackingHero";
-import { TrackingTabs } from "./components/TrackingTabs";
-import { TrackingSearchForm } from "./components/TrackingSearchForm";
-import { TrackingExampleCard } from "./components/TrackingExampleCard";
+import { TrackingHero } from "@/modules/orders/ui/tracking/TrackingHero";
+import { TrackingTabs } from "@/modules/orders/ui/tracking/TrackingTabs";
+import { TrackingSearchForm } from "@/modules/orders/ui/tracking/TrackingSearchForm";
+import { TrackingExampleCard } from "@/modules/orders/ui/tracking/TrackingExampleCard";
 import { WhatsAppFAB } from "@/shared/ui/mobile/WhatsAppFAB";
-import { DesktopSuivi } from "@/shared/ui/DesktopSuivi";
+import { DesktopSuivi } from "@/modules/orders/ui/tracking/DesktopSuivi";
 
 export default function TrackingPage() {
   return (

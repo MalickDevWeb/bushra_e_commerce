@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getProducts } from "@/app/actions/product.actions";
+import { getProducts } from "@/modules/content/actions/product.actions";
 import {
   MobileBenefits,
   MobileHero,
@@ -8,7 +8,7 @@ import {
   MobileProductGrid,
   MobileDeliveryBanner,
 } from "@/shared/ui/mobile";
-import { DesktopBoutique } from "@/shared/ui/DesktopBoutique";
+import { DesktopBoutique } from "@/modules/catalog/ui/boutique/DesktopBoutique";
 
 export default async function BoutiquePage() {
   const products = await getProducts();

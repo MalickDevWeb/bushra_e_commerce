@@ -1,7 +1,7 @@
-import { AccountHeader } from "./components/AccountHeader";
-import { AccountMenu } from "./components/AccountMenu";
+import { AccountHeader } from "@/modules/account/ui/AccountHeader";
+import { AccountMenu } from "@/modules/account/ui/AccountMenu";
 import { WhatsAppFAB } from "@/shared/ui/mobile/WhatsAppFAB";
-import { DesktopAccount } from "@/shared/ui/DesktopAccount";
+import { DesktopAccount } from "@/modules/account/ui/DesktopAccount";
 
 export default function AccountPage() {
   return (

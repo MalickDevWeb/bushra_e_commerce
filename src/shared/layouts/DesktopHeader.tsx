@@ -64,7 +64,7 @@ export function DesktopHeader() {
             placeholder="Rechercher..." 
             className="w-48 bg-transparent border border-[#d4af37]/30 rounded-full py-1.5 pl-4 pr-10 text-[0.8rem] text-[#e8e1d3] placeholder-[#a89b82] focus:outline-none focus:border-[#d4af37]/70 transition-colors"
           />
-          <button className="absolute right-3 top-1/2 -translate-y-1/2 text-[#a89b82] hover:text-[#d4af37] transition-colors">
+          <button type="button" aria-label="Rechercher" className="absolute right-3 top-1/2 -translate-y-1/2 text-[#a89b82] hover:text-[#d4af37] transition-colors">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
             </svg>

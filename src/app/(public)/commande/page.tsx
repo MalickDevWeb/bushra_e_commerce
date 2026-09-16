@@ -1,30 +1,50 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/shared/constants/config";
 import { useCart } from "@/shared/providers/CartProvider";
-import { DesktopCheckout } from "@/shared/ui/DesktopCheckout";
+import { DesktopCheckout } from "@/modules/orders/ui/checkout/DesktopCheckout";
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, totalPrice, clearCart } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    setIsLoaded(true);
-  }, []);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const firstName = formData.get("firstName")?.toString().trim() || "";
+    const lastName = formData.get("lastName")?.toString().trim() || "";
     setIsSubmitting(true);
-    // Simulate API call
-    setTimeout(() => {
+    setError(null);
+
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerName: `${firstName} ${lastName}`.trim(),
+          customerPhone: formData.get("phone")?.toString() || "",
+          address: formData.get("address")?.toString() || "",
+          notes: formData.get("notes")?.toString() || undefined,
+          deliveryFee,
+          paymentMethod: formData.get("payment")?.toString() || "COD",
+          items: items.map((item) => ({ productId: item.id, quantity: item.quantity })),
+        }),
+      });
+      const result = (await response.json()) as { success?: boolean; error?: string; order?: { orderNumber: string } };
+      if (!response.ok || !result.success || !result.order) {
+        throw new Error(result.error || "Impossible d'enregistrer la commande.");
+      }
       clearCart();
-      router.push(ROUTES.checkoutSuccess);
-    }, 1500);
+      router.push(`${ROUTES.checkoutSuccess}?order=${encodeURIComponent(result.order.orderNumber)}`);
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : "Impossible d'enregistrer la commande.");
+      setIsSubmitting(false);
+    }
   };
 
   const deliveryFee = 2000; // Flat delivery fee for Senegal
@@ -32,16 +52,14 @@ export default function CheckoutPage() {
 
   return (
     <>
-      <DesktopCheckout />
+      <DesktopCheckout onSubmit={handleSubmit} isSubmitting={isSubmitting} error={error} />
 
       <div className="lg:hidden mx-auto max-w-7xl px-4 py-8 pb-32">
         <h1 className="font-serif text-[2rem] text-[#e8e1d3] mb-8">
           Passer la <span className="text-[#d4af37]">commande</span>
         </h1>
 
-        {!isLoaded ? (
-          <div className="min-h-[60vh] flex justify-center items-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#d4af37]"></div></div>
-        ) : items.length === 0 ? (
+        {items.length === 0 ? (
           <div className="flex min-h-[60vh] flex-col items-center justify-center px-4">
             <h2 className="font-serif text-[1.5rem] text-[#e8e1d3]">Votre panier est vide</h2>
             <button onClick={() => router.push(ROUTES.shop)} className="mt-6 text-[#d4af37] underline">Retour à la boutique</button>
@@ -54,20 +72,21 @@ export default function CheckoutPage() {
                 <h2 className="font-serif text-[1.3rem] text-[#e8e1d3] mb-6">Informations de livraison</h2>
                 <form id="mobile-checkout-form" onSubmit={handleSubmit} className="flex flex-col gap-5">
                   <div className="flex flex-col gap-5">
-                    <input required type="text" placeholder="Prénom" className="w-full rounded-[10px] border border-[#d4af37]/30 bg-transparent px-4 py-3 text-[0.85rem] text-[#e8e1d3] placeholder:text-[#a89b82] focus:border-[#d4af37] focus:outline-none focus:ring-1 focus:ring-[#d4af37]" />
-                    <input required type="text" placeholder="Nom" className="w-full rounded-[10px] border border-[#d4af37]/30 bg-transparent px-4 py-3 text-[0.85rem] text-[#e8e1d3] placeholder:text-[#a89b82] focus:border-[#d4af37] focus:outline-none focus:ring-1 focus:ring-[#d4af37]" />
+                    <input required name="firstName" type="text" placeholder="Prénom" className="w-full rounded-[10px] border border-[#d4af37]/30 bg-transparent px-4 py-3 text-[0.85rem] text-[#e8e1d3] placeholder:text-[#a89b82] focus:border-[#d4af37] focus:outline-none focus:ring-1 focus:ring-[#d4af37]" />
+                    <input required name="lastName" type="text" placeholder="Nom" className="w-full rounded-[10px] border border-[#d4af37]/30 bg-transparent px-4 py-3 text-[0.85rem] text-[#e8e1d3] placeholder:text-[#a89b82] focus:border-[#d4af37] focus:outline-none focus:ring-1 focus:ring-[#d4af37]" />
                   </div>
-                  <input required type="tel" placeholder="Numéro de téléphone (WhatsApp)" className="w-full rounded-[10px] border border-[#d4af37]/30 bg-transparent px-4 py-3 text-[0.85rem] text-[#e8e1d3] placeholder:text-[#a89b82] focus:border-[#d4af37] focus:outline-none focus:ring-1 focus:ring-[#d4af37]" />
-                  <input required type="text" placeholder="Adresse complète" className="w-full rounded-[10px] border border-[#d4af37]/30 bg-transparent px-4 py-3 text-[0.85rem] text-[#e8e1d3] placeholder:text-[#a89b82] focus:border-[#d4af37] focus:outline-none focus:ring-1 focus:ring-[#d4af37]" />
-                  <input type="text" placeholder="Indications pour le livreur (Optionnel)" className="w-full rounded-[10px] border border-[#d4af37]/30 bg-transparent px-4 py-3 text-[0.85rem] text-[#e8e1d3] placeholder:text-[#a89b82] focus:border-[#d4af37] focus:outline-none focus:ring-1 focus:ring-[#d4af37]" />
+                  <input required name="phone" type="tel" placeholder="Numéro de téléphone (WhatsApp)" className="w-full rounded-[10px] border border-[#d4af37]/30 bg-transparent px-4 py-3 text-[0.85rem] text-[#e8e1d3] placeholder:text-[#a89b82] focus:border-[#d4af37] focus:outline-none focus:ring-1 focus:ring-[#d4af37]" />
+                  <input required name="address" type="text" placeholder="Adresse complète" className="w-full rounded-[10px] border border-[#d4af37]/30 bg-transparent px-4 py-3 text-[0.85rem] text-[#e8e1d3] placeholder:text-[#a89b82] focus:border-[#d4af37] focus:outline-none focus:ring-1 focus:ring-[#d4af37]" />
+                  <input name="notes" type="text" placeholder="Indications pour le livreur (Optionnel)" className="w-full rounded-[10px] border border-[#d4af37]/30 bg-transparent px-4 py-3 text-[0.85rem] text-[#e8e1d3] placeholder:text-[#a89b82] focus:border-[#d4af37] focus:outline-none focus:ring-1 focus:ring-[#d4af37]" />
                   
                   <h2 className="font-serif text-[1.3rem] text-[#e8e1d3] mb-4 mt-4">Méthode de paiement</h2>
                   <div className="rounded-[10px] border border-[#d4af37] bg-[#d4af37]/5 p-4">
                     <label className="flex items-center gap-3 cursor-pointer">
-                      <input type="radio" name="payment" defaultChecked className="accent-[#d4af37] w-4 h-4" />
+                      <input type="radio" name="payment" value="COD" defaultChecked className="accent-[#d4af37] w-4 h-4" />
                       <span className="text-[#e8e1d3] text-[0.9rem]">Paiement à la livraison</span>
                     </label>
                   </div>
+                  {error && <p className="text-sm text-red-400" role="alert">{error}</p>}
                 </form>
               </div>
             </div>

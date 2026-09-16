@@ -1,4 +1,4 @@
-import type { FeatureItem } from "@/shared/constants/home.data";
+import type { FeatureItem } from "@/modules/content/data/home.data";
 
 function FeatureIcon({ icon }: { icon: FeatureItem["icon"] }) {
   const paths: Record<FeatureItem["icon"], React.ReactNode> = {

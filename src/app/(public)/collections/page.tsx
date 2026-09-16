@@ -1,9 +1,9 @@
-import { CollectionsHero } from "./components/CollectionsHero";
-import { CollectionsCategories } from "./components/CollectionsCategories";
-import { CollectionsFilterBar } from "./components/CollectionsFilterBar";
-import { CollectionsProductGrid } from "./components/CollectionsProductGrid";
-import { CollectionsDeliveryBanner } from "./components/CollectionsDeliveryBanner";
-import { DesktopCollections } from "@/shared/ui/DesktopCollections";
+import { CollectionsHero } from "@/modules/content/ui/collections/CollectionsHero";
+import { CollectionsCategories } from "@/modules/content/ui/collections/CollectionsCategories";
+import { CollectionsFilterBar } from "@/modules/content/ui/collections/CollectionsFilterBar";
+import { CollectionsProductGrid } from "@/modules/content/ui/collections/CollectionsProductGrid";
+import { CollectionsDeliveryBanner } from "@/modules/content/ui/collections/CollectionsDeliveryBanner";
+import { DesktopCollections } from "@/modules/content/ui/collections/DesktopCollections";
 
 export default function CollectionsPage() {
   return (

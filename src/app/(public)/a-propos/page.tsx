@@ -1,4 +1,4 @@
-import { DesktopAbout } from "@/shared/ui/DesktopAbout";
+import { DesktopAbout } from "@/modules/content/ui/about/DesktopAbout";
 
 export default function AboutPage() {
   return (

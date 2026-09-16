@@ -11,7 +11,7 @@ export function MobileDeliveryBanner() {
             <p className="text-[0.65rem] text-[#a89b82]">Paiement à la livraison ou Wave / Orange Money</p>
           </div>
         </div>
-        <button className="flex items-center gap-1 rounded-full border border-[#d4af37]/40 px-3 py-1 text-[0.7rem] text-[#e8e1d3] transition-colors hover:bg-[#d4af37]/10">
+        <button type="button" className="flex items-center gap-1 rounded-full border border-[#d4af37]/40 px-3 py-1 text-[0.7rem] text-[#e8e1d3] transition-colors hover:bg-[#d4af37]/10">
           En savoir plus
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-3 w-3 text-[#d4af37]">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />

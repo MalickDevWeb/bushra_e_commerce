@@ -1,10 +1,9 @@
-"use client";
-
 import Link from "next/link";
 import { ROUTES } from "@/shared/constants/config";
 
-export default function CheckoutSuccessPage() {
-  const orderNumber = Math.floor(100000 + Math.random() * 900000);
+export default async function CheckoutSuccessPage({ searchParams }: { searchParams: Promise<{ order?: string }> }) {
+  const params = await searchParams;
+  const orderNumber = params.order || "-";
 
   return (
     <div className="flex min-h-[70vh] flex-col items-center justify-center px-4 py-12 text-center">
@@ -24,7 +23,7 @@ export default function CheckoutSuccessPage() {
       </p>
       
       <p className="text-[0.9rem] text-[#a89b82] mb-10">
-        Numéro de commande : <span className="font-mono text-[#d4af37]">#{orderNumber}</span>
+        Numéro de commande : <span className="font-mono text-[#d4af37]">{orderNumber}</span>
       </p>
 
       <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">

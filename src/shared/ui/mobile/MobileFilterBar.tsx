@@ -35,7 +35,9 @@ export function MobileFilterBar() {
   return (
     <section className="px-5 mb-4 flex items-center justify-between">
       <div className="flex items-center gap-2">
-        <button 
+        <button
+          type="button"
+          aria-label={currentCategory ? "Retirer le filtre de catégorie" : "Filtrer par catégorie"}
           onClick={() => {
             const nextCat = currentCategory ? "" : "encensoirs";
             router.push(pathname + "?" + createQueryString("category", nextCat));
@@ -47,7 +49,9 @@ export function MobileFilterBar() {
           </svg>
           {currentCategory ? "Filtré" : "Filtrer"}
         </button>
-        <button 
+        <button
+          type="button"
+          aria-label="Trier par prix"
           onClick={toggleSort}
           className={`flex items-center gap-1.5 rounded-md border ${currentSort ? "border-[#d4af37] bg-[#d4af37]/10" : "border-[#d4af37]/40"} px-2.5 py-1.5 text-[0.75rem] text-[#e8e1d3] transition-colors`}
         >
@@ -64,7 +68,9 @@ export function MobileFilterBar() {
           )}
         </button>
       </div>
-      <button 
+      <button
+        type="button"
+        aria-label="Réinitialiser les filtres"
         onClick={() => router.push(pathname)}
         className="flex items-center gap-1.5 text-[0.75rem] text-[#a89b82] hover:text-[#d4af37] transition-colors"
       >

@@ -1,9 +1,10 @@
 import { AdminPageHeader } from "@/shared/ui/AdminPageHeader";
 import { AdminPlaceholderPanel } from "@/shared/ui/AdminPlaceholderPanel";
+import { AdminPageShell } from "@/shared/ui/AdminPageShell";
 
 export default function ContenuCollectionsPage() {
   return (
-    <div className="flex flex-col gap-6 w-full text-[#e8e1d3] max-w-[1600px] mx-auto pb-10">
+    <AdminPageShell>
       <AdminPageHeader
         title="Mise en avant des Collections"
         description="Gérez l'affichage visuel des collections sur le site"
@@ -11,7 +12,7 @@ export default function ContenuCollectionsPage() {
       <AdminPlaceholderPanel>
         Outil de gestion des images de collections à venir.
       </AdminPlaceholderPanel>
-    </div>
+    </AdminPageShell>
   );
 }
 

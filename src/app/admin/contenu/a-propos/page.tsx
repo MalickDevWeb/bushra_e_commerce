@@ -1,12 +1,13 @@
 import { AboutPageEditor } from "@/modules/content/ui/AboutPageEditor";
 import { AdminPageHeader } from "@/shared/ui/AdminPageHeader";
+import { AdminPageShell } from "@/shared/ui/AdminPageShell";
 
 export default function ContenuAProposPage() {
   return (
-    <div className="flex flex-col gap-6 w-full text-[#e8e1d3] max-w-[1600px] mx-auto pb-10">
+    <AdminPageShell>
       <AdminPageHeader title="Page À Propos" description="Racontez l'histoire de Bushra" />
       <AboutPageEditor />
-    </div>
+    </AdminPageShell>
   );
 }
 

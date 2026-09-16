@@ -14,6 +14,7 @@ export function MobileHero() {
           alt="Bushra Animation" 
           fill 
           priority 
+          sizes="100vw"
           unoptimized
           className="object-contain object-top opacity-50"
         />

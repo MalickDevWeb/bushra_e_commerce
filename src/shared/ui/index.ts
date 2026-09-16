@@ -12,4 +12,3 @@ export { BottomNavbar } from "./BottomNavbar";
 export { default as CollectionIntro } from "./CollectionIntro";
 export { default as MobileFilterBar } from "./MobileFilterBar";
 export { default as DeliveryBanner } from "./DeliveryBanner";
-export * from "./DesktopProduct";
