@@ -109,6 +109,9 @@ Après modification du schéma Prisma, synchroniser la base de développement av
 | `npm run lint` | ESLint |
 | `npm run typecheck` | Vérification TypeScript |
 | `npm run db:push` | Synchronisation Prisma avec Neon |
+| `npm run db:seed:massive` | Générer 350 produits, 350 clients, 1 200 commandes et 15 collections de test |
+
+Le seeder massif est idempotent : il remplace uniquement les données marquées `LOAD-` et les comptes `@loadtest.bushra.test`. Les comptes générés utilisent le mot de passe de test `LoadTest123!`. Il réutilise les images locales déjà présentes dans `public/images`.
 
 ## Ajouter un module métier
 

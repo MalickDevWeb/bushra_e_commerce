@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "db:push": "node scripts/db-push.mjs"
+    "db:push": "node scripts/db-push.mjs",
+    "db:seed:massive": "node scripts/seed-massive.mjs"
   },
   "engines": {
     "node": ">=20.9.0"
